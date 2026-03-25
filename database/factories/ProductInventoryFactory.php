@@ -14,11 +14,11 @@ class ProductInventoryFactory extends Factory
      *
      * @return array<string, mixed>
      */
-   public function definition(): array
-{
-    return [
-        'product_id' => \App\Models\Product::inRandomOrder()->first()->id,
-        'quantity' => fake()->numberBetween(1,100),
-    ];
-}
+    public function definition(): array
+    {
+        return [
+            'variant_id' => \App\Models\ProductVariant::inRandomOrder()->first()->id,
+            'quantity' => fake()->numberBetween(1, 100),
+        ];
+    }
 }

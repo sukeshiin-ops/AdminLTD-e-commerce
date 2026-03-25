@@ -14,15 +14,15 @@ class OrderDetailFactory extends Factory
      *
      * @return array<string, mixed>
      */
-  public function definition(): array
-{
-    return [
-        'order_id' => \App\Models\Order::inRandomOrder()->first()->id,
-        'product_id' => \App\Models\Product::inRandomOrder()->first()->id,
-        'order_quantity' => fake()->numberBetween(1,5),
-        'price_per_unit' => fake()->numberBetween(100,5000),
-        'discount' => fake()->numberBetween(0,100),
-        'tax' => fake()->numberBetween(5,18),
-    ];
-}
+    public function definition(): array
+    {
+        return [
+            'order_id' => \App\Models\Order::inRandomOrder()->first()->id,
+            'variant_id' => \App\Models\ProductVariant::inRandomOrder()->first()->id,
+            'order_quantity' => fake()->numberBetween(1, 5),
+            'price_per_unit' => fake()->numberBetween(100, 5000),
+            'discount' => fake()->numberBetween(0, 100),
+            'tax' => fake()->numberBetween(5, 18),
+        ];
+    }
 }

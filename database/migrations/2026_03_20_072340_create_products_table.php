@@ -13,22 +13,18 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
+            $table->string('user_id')->nullable();
             $table->string('product_name');
             $table->text('small_description');
 
-            $table->foreignId('category_id')
-                ->constrained()
-                ->cascadeOnDelete();
+            $table->foreignId('category_id')->constrained()->cascadeOnDelete();
 
-
-            $table->decimal('product_price', 10, 2);
-
+            // $table->decimal('product_price', 10, 2);
             $table->string('product_image')->nullable();
-
             $table->text('description')->nullable();
 
-            $table->decimal('discount', 8, 2)->default(0);
-            $table->decimal('tax', 8, 2)->default(0);
+            // $table->decimal('discount', 8, 2)->default(0);
+            // $table->decimal('tax', 8, 2)->default(0);
 
             $table->timestamps();
         });

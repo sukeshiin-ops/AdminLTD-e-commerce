@@ -38,14 +38,14 @@ class ProductFactory extends Factory
         $productName = $this->faker->randomElement($productName);
 
         return [
-            'product_name' => $productName,
-            'small_description' => $this->faker->sentence(),
+            'product_name' => fake()->words(3, true),
+            'small_description' => fake()->sentence(),
             'category_id' => $category->id,
-            'product_price' => $this->faker->numberBetween(500, 5000),
+            'product_price' => fake()->numberBetween(500, 5000),
             'product_image' => 'product.jpg',
-            'description' => $this->faker->paragraph(),
-            'discount' => $this->faker->numberBetween(0, 100),
-            'tax' => $this->faker->numberBetween(5, 18),
+            'description' => fake()->paragraph(),
+            'discount' => fake()->numberBetween(0, 100),
+            'tax' => fake()->numberBetween(5, 18),
         ];
     }
 }

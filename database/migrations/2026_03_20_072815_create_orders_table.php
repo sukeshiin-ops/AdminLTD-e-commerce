@@ -14,9 +14,7 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('user_id')
-                ->constrained()
-                ->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
 
             $table->text('order_address');
 
@@ -24,7 +22,7 @@ return new class extends Migration
             $table->decimal('final_tax', 10, 2)->default(0);
             $table->decimal('final_amount', 10, 2);
 
-            $table->enum('status',['pending', 'cancle', 'booked', 'delivered'])->default('pending');
+            $table->enum('status', ['pending', 'cancel', 'booked', 'delivered'])->default('pending'); // ✅ FIXED
 
             $table->timestamps();
         });

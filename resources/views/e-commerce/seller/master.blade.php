@@ -30,8 +30,10 @@
             @yield('cart-content')
             @yield('invoice-content')
             @yield('stock-content')
-
+            @yield('attribute-content')
             @yield('edit-product-seller')
+
+
 
         </div>
 

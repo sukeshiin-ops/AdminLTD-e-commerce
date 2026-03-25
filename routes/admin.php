@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\AttribueController;
+use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\EditValueController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SellerController;
@@ -16,14 +19,13 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::middleware([NotAccessLoginIfAuthorize::class])->group(function () {
-   Route::view('register-page', 'admin.auth.register')->name('registerPage');
+    Route::view('register-page', 'admin.auth.register')->name('registerPage');
 
-   Route::view('login-page', 'admin.auth.login')->name('LoginPage');
+    Route::view('login-page', 'admin.auth.login')->name('LoginPage');
 
-   Route::view('forgot-password', 'admin.auth.forgot-password')->name('ForgotPasswordPage');
+    Route::view('forgot-password', 'admin.auth.forgot-password')->name('ForgotPasswordPage');
 
     Route::view('reset-password', 'admin.auth.reset-password')->name('ResetPasswordPage');
-
 });
 
 
@@ -43,43 +45,74 @@ Route::post('send_password', [UserController::class, 'Send_Password_to_User'])->
 
 Route::resource('users', UserMangeController::class);
 
+Route::get('all-Product', [ProductController::class, 'allProduct'])->name('view.all.product');
+
+
+//admin-product-curd
+Route::get('/seller/product/create', [ProductController::class, 'create'])->name('product.create');
+Route::post('/seller/product/store', [ProductController::class, 'store'])->name('seller.product.store');
 
 
 
 
 Route::middleware([checkLogin::class])->group(function () {
 
-   Route::get('admin-page', function () {
-      return view('admin.layout.index');
-   })->name('dashboard.page');
+    Route::get('admin-page', function () {
+        return view('admin.layout.index');
+    })->name('dashboard.page');
 
 
-   Route::get('logout', [UserController::class, 'logout'])->name('logout.now');
+    Route::get('logout', [UserController::class, 'logout'])->name('logout.now');
 
-   Route::view('change-password', 'admin.auth.change-password')->name('change.password.now');
+    Route::view('change-password', 'admin.auth.change-password')->name('change.password.now');
 
-   Route::view('all-user', 'admin.User.allUser')->name('view-All-User.now');
-
-
-   //Route::view('update-user', 'admin.User.User-update')->name('update.user.page');
-
-   Route::view('add-user', 'admin.User.Add-user')->name('add.user.now');
-
-   Route::view('categories', 'admin.Category.all-category')->name('view.category.now');
+    Route::view('all-user', 'admin.User.allUser')->name('view-All-User.now');
 
 
-   Route::get('all-categorie', [CategoryController::class, 'index'])->name('all.category.now');
+    //Route::view('update-user', 'admin.User.User-update')->name('update.user.page');
+
+    Route::view('add-user', 'admin.User.Add-user')->name('add.user.now');
+
+    Route::view('categories', 'admin.Category.all-category')->name('view.category.now');
+
+
+    Route::get('all-categorie', [CategoryController::class, 'index'])->name('all.category.now');
     Route::get('add-categorie', [CategoryController::class, 'show'])->name('show.category.now');
     Route::post('add-categorie-db', [CategoryController::class, 'create'])->name('add.category.now');
 
 
-   Route::view('add-categories', 'admin.Category.add-category')->name('add.categories.now');
+    Route::view('add-categories', 'admin.Category.add-category')->name('add.categories.now');
+
+    //Attribute
+    Route::get('all-attibute', [AttributeController::class, 'showAttribue'])->name('show.all.attribute');
+
+    Route::get('delete-attribute/{id}', [AttributeController::class, 'deleteAttribute'])->name('delete.attribute.now');
+
+    Route::view('add-attribute', 'admin.attribute.add-attribute')->name('add.attribute.now');
+
+    Route::post('store-attribute', [AttributeController::class, 'store'])->name('store.attribute.now');
+
+    Route::get('edit-attribute/{id}', [AttributeController::class, 'updatePage'])->name('update.page.attribute.now');
+
+    Route::post('update-attribute{id}',  [AttributeController::class, 'updateAttribute'])->name('update.attribute.now');
 
 
+    //Attribute-value
+    Route::view('all-attribute-value', 'admin.attribute.all-attribute-value')->name('view.all-attribute.value');
 
+
+    //Edit Value Controller
+    Route::resource('edit-value', EditValueController::class);
+
+    //for add value
+    Route::get('add-value/{id}', [AttributeController::class, 'createValue'])->name('add-value-now');
+    Route::post('store-value/{id}', [AttributeController::class, 'storeValue'])->name('store-value-now');
+
+
+    //for attribute route in add prouduct in admin
+    Route::post('/get-attribute-values', [ProductController::class, 'getAttributeValues'])
+        ->name('get.attribute.values');
 })->can('isAdmin');
-
-
 
 
 
@@ -104,9 +137,9 @@ Route::get('category-select', [CategoryController::class, 'showCategory'])->name
 
 Route::get('category/{id}', [CategoryController::class, 'showCategoryProducts'])->name('category.products');
 
-Route::get('e-commerce', [CategoryController::class,'showCategory'])->name('e-commerce-page');
+Route::get('e-commerce', [CategoryController::class, 'showCategory'])->name('e-commerce-page');
 
-Route::get('category/{id}', [CategoryController::class,'showCategoryProducts'])->name('category.products');
+Route::get('category/{id}', [CategoryController::class, 'showCategoryProducts'])->name('category.products');
 
 Route::get('seller-product', [SellerController::class, 'purchasedUsers'])->name('view.seller.product');
 
@@ -149,7 +182,7 @@ Route::post('/seller/stock/store', [StockController::class, 'store'])->name('sel
 
 
 //after cart
-Route::get('order-checkout', [OrderController::class,'OrderCheckout'])->name('order.checkout');
+Route::get('order-checkout', [OrderController::class, 'OrderCheckout'])->name('order.checkout');
 Route::get('user-order-page', [OrderController::class, 'userOrders'])->name('user.order.page');
 
 

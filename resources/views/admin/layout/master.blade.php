@@ -99,6 +99,24 @@
 
                 @yield('add-user-content')
 
+                @yield('all-product-content')
+
+                @yield('add-product-content')
+
+                @yield('attribute-content')
+
+                @yield('add-attribute-content')
+
+                @yield('edit-attribute-content')
+
+                @yield('attribute-value-content')
+
+                @yield('edit-value-content')
+
+                @yield('add-value-content')
+
+                @yield('update-value-content')
+
 
             <!--end::App Content-->
 

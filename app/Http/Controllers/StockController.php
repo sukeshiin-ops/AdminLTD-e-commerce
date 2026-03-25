@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\ProductInventory;
 use App\Models\StockHistory;
+use App\Models\VariantAttribute;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 
 class StockController extends Controller
 {
@@ -96,7 +97,7 @@ class StockController extends Controller
             'tax' => $request->tax,
             'discount' => 30,
             'user_id' => Auth::id()
-        ]); 
+        ]);
 
         return redirect()->route('view.seller.product')
             ->with('success', 'Product Created Successfully');
@@ -104,22 +105,37 @@ class StockController extends Controller
 
     public function deleteProduct($id)
     {
-
         DB::beginTransaction();
 
         try {
-            $product_id = $id;
-            Product::where('id', $product_id)->delete();
+
+            $product = Product::with('variants.inventory')->findOrFail($id);
+
+            foreach ($product->variants as $variant) {
+
+
+                if ($variant->inventory) {
+                    $variant->inventory->delete();
+                }
+
+                VariantAttribute::where('variant_id', $variant->id)->delete();
+
+
+                $variant->delete();
+            }
+
+
+            $product->delete();
 
             DB::commit();
-            return redirect()->route('view.seller.product')->with('success', 'Product Deleted Successfully!!');
+
+            return redirect()->route('view.seller.product')
+                ->with('success', 'Product Deleted Successfully!!');
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e->getMessage());
 
             return redirect()->back()->with('error', $e->getMessage());
         }
-
     }
 
     public function editPage($id)

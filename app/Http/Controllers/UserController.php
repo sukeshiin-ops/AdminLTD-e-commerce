@@ -9,6 +9,7 @@ use App\Models\Cart;
 use App\Models\Otp;
 use App\Models\Product;
 use App\Models\ProductInventory;
+use App\Models\ProductVariant;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -234,7 +235,45 @@ class UserController extends Controller
     }
 
 
-    public function checkwhoAccessCart(int $id)
+    // public function checkwhoAccessCart(int $id)
+    // {
+    //     if (!Auth::check()) {
+    //         return redirect()->route('LoginPage');
+    //     }
+
+    //     $user = Auth::user();
+
+
+    //     if ($user->role == 'admin') {
+    //         return redirect()->route('dashboard.page');
+    //     }
+
+    //     if ($user->role == 'seller' || $user->role == 'user') {
+
+    //         $user_id =   Auth::user()->id;
+
+    //         $product_id = $id;
+    //         $p = Product::all();
+
+    //         $Cart = Cart::where('user_id', $user_id)->where('product_id', $product_id)->first();
+    //         $p = Product::find($product_id);
+
+    //         Cart::where('user_id', $user_id)->updateOrCreate([
+    //             'user_id' => $user_id,
+    //             'product_id' => $product_id,
+    //         ], [
+    //             'price' => $p->product_price,
+    //             'quantity' =>  $Cart ? $Cart->quantity + 1 : 1,
+    //         ]);
+
+
+    //         return redirect()->route('e-commerce-page')->with('success', ' ');
+    //     }
+    // }
+
+
+
+    public function checkwhoAccessCart(int $variant_id)
     {
         if (!Auth::check()) {
             return redirect()->route('LoginPage');
@@ -242,34 +281,39 @@ class UserController extends Controller
 
         $user = Auth::user();
 
-
         if ($user->role == 'admin') {
             return redirect()->route('dashboard.page');
         }
 
         if ($user->role == 'seller' || $user->role == 'user') {
 
-            $user_id =   Auth::user()->id;
+            $user_id = $user->id;
 
-            $product_id = $id;
-            $p = Product::all();
+            // ✅ Variant find kar
+            $variant = ProductVariant::find($variant_id);
 
-            $Cart = Cart::where('user_id', $user_id)->where('product_id', $product_id)->first();
-            $p = Product::find($product_id);
+            if (!$variant) {
+                return back()->with('error', 'Variant not found');
+            }
 
-            Cart::where('user_id', $user_id)->updateOrCreate([
-                'user_id' => $user_id,
-                'product_id' => $product_id,
-            ], [
-                'price' => $p->product_price,
-                'quantity' =>  $Cart ? $Cart->quantity + 1 : 1,
-            ]);
+            // ✅ Check cart
+            $cart = Cart::where('user_id', $user_id)
+                ->where('variant_id', $variant_id)
+                ->first();
 
+            // ✅ Update or Create
+            Cart::updateOrCreate(
+                [
+                    'user_id' => $user_id,
+                    'variant_id' => $variant_id,
+                ],
+                [
+                    'price' => $variant->price,
+                    'quantity' => $cart ? $cart->quantity + 1 : 1,
+                ]
+            );
 
-            return redirect()->route('e-commerce-page')->with('success', ' ');
+            return redirect()->route('e-commerce-page')->with('success', 'Added to cart');
         }
     }
-
-
-
 }

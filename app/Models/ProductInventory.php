@@ -10,16 +10,14 @@ class ProductInventory extends Model
 {
     use HasFactory;
     public $table = 'product_inventory';
+     public $guarded = ['id'];
 
     public function Product_table()
     {
         return $this->belongsTo(Product::class, 'product_id');
     }
 
-    protected $fillable = [
-        'product_id',
-        'quantity'
-    ];
+
 
 
     public function histories()

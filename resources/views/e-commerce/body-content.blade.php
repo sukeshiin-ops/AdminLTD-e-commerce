@@ -17,7 +17,7 @@
 
     @php
         use App\Models\Product;
-        $allDatas = Product::all();
+        $allDatas = Product::with('productVariant')->get();
     @endphp
 
 
@@ -28,6 +28,10 @@
         <div class="container">
             <div class="row">
                 @foreach ($allDatas as $alldata)
+                    @php
+                        $variant = $alldata->productVariant->first();
+                    @endphp
+
                     <div class="col-lg-4 col-md-6 mb-4">
                         <div class="card card-primary card-outline h-100">
                             <!-- Fixed image size with object-fit cover -->
@@ -44,10 +48,15 @@
                                         <i class="fas fa-eye"></i> View
                                     </a>
 
-                                        <a href="{{ route('cart.access', $alldata->id) }}" class="btn btn-primary">
-                                            <i class="fas fa-shopping-cart"></i>
+                                              @if ($variant)
+                                        <a href="{{ route('cart.access', $variant->id) }}" class="btn btn-primary">
                                             Add to Cart
                                         </a>
+                                    @else
+                                        <button class="btn btn-secondary" disabled>
+                                            Out of Stock
+                                        </button>
+                                    @endif
 
 
                                 </div>
@@ -55,6 +64,9 @@
                         </div>
                     </div>
                 @endforeach
+
+
+
             </div> <!-- /.row -->
         </div><!-- /.container-fluid -->
     </div>

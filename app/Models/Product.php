@@ -48,8 +48,18 @@ class Product extends Model
 
 
     // Product.php
-    public function inventory()
+    // public function inventory()
+    // {
+    //     return $this->hasOne(ProductInventory::class, 'product_id');
+    // }
+
+    public function variants()
     {
-        return $this->hasOne(ProductInventory::class, 'product_id');
+        return $this->hasMany(ProductVariant::class, 'product_id');
+    }
+
+    public function productVariant()
+    {
+        return $this->hasMany(ProductVariant::class);
     }
 }

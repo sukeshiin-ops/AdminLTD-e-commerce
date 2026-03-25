@@ -3,9 +3,9 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\User;
-use App\Models\Product;
 use App\Models\Cart;
+use App\Models\User;
+use App\Models\ProductVariant;
 
 class CartFactory extends Factory
 {
@@ -13,21 +13,14 @@ class CartFactory extends Factory
 
     public function definition(): array
     {
-        do {
-            $user_id = User::inRandomOrder()->value('id');
-            $product_id = Product::inRandomOrder()->value('id');
-
-        } while (
-            Cart::where('user_id', $user_id)
-                ->where('product_id', $product_id)
-                ->exists()
-        );
+        $user_id = User::inRandomOrder()->value('id');
+        $variant_id = ProductVariant::inRandomOrder()->value('id');
 
         return [
             'user_id' => $user_id,
-            'product_id' => $product_id,
-            'quantity' => fake()->numberBetween(1,5),
-            'price' => fake()->numberBetween(100,5000),
+            'variant_id' => $variant_id,
+            'quantity' => $this->faker->numberBetween(1, 5),
+            'price' => $this->faker->numberBetween(100, 5000),
         ];
     }
 }

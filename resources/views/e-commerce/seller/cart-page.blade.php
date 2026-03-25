@@ -4,7 +4,8 @@
 use App\Models\Cart;
 
 $user = Auth::user();
-$cart = Cart::where('user_id', $user->id)->get();
+$cart = Cart::with('variant.product', 'variant.attributes.attributeValue')->where('user_id', Auth::id())->get();
+// $cart = Cart::where('user_id', $user->id)->get();
 ?>
 
 @section('cart-content')
@@ -27,7 +28,7 @@ $cart = Cart::where('user_id', $user->id)->get();
                         </div>
 
                         @if ($cart->count() > 0)
-                            @foreach ($cart as $item)
+                            {{-- @foreach ($cart as $item)
                                 <div class="row align-items-center mb-3 " id="row{{ $item->product_rel->id }}">
 
                                     <div class="col-md-6 d-flex align-items-center">
@@ -63,6 +64,66 @@ $cart = Cart::where('user_id', $user->id)->get();
                                     </div>
 
                                     <div class="col-md-2 fw-bold total{{ $item->product_rel->id }}">
+                                        ${{ $item->price * $item->quantity }}
+                                    </div>
+
+                                </div>
+
+                                <hr>
+                            @endforeach --}}
+
+
+                            @foreach ($cart as $item)
+                                <div class="row align-items-center mb-3" id="row{{ $item->variant->id }}">
+
+                                    <div class="col-md-6 d-flex align-items-center">
+
+                                        <img src="{{ $item->variant->product->product_image }}" width="70"
+                                            class="me-3 rounded">
+
+                                        {{--
+                                        <h6 class="mb-1">
+                                            {{ $item->variant->product->product_name }}
+                                        </h6> --}}
+
+
+                                        <small class="text-muted">
+                                            @foreach ($item->variant->attributes as $attr)
+                                                {{ $attr->attributeValue->value }},
+                                            @endforeach
+                                        </small>
+
+
+
+                                        <div>
+                                            <h6 class="mb-1">
+                                                {{ $item->variant->product->product_name }}
+                                            </h6>
+
+                                            <a href="{{ route('product-remove', $item->variant->id) }}"
+                                                class="text-danger small">Remove</a>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        ${{ $item->price }}
+                                    </div>
+
+                                    <div class="col-md-2">
+
+                                        <a class="decrement btn btn-danger btn-sm" data-id="{{ $item->variant->id }}">-</a>
+
+                                        <span class="qty{{ $item->variant->id }} mx-2">
+                                            {{ $item->quantity }}
+                                        </span>
+
+                                        <a class="increment btn btn-success btn-sm"
+                                            data-id="{{ $item->variant->id }}">+</a>
+
+                                    </div>
+
+                                    <div class="col-md-2 fw-bold total{{ $item->variant->id }}">
                                         ${{ $item->price * $item->quantity }}
                                     </div>
 
