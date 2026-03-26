@@ -74,7 +74,7 @@ $products = Product::where('user_id', Auth::id())->get();
 
                 </div>
 
-                <table id="productTable" class="table table-hover table-bordered align-middle text-center">
+                {{-- <table id="productTable" class="table table-hover table-bordered align-middle text-center">
 
                     <thead class="table-dark">
                         <tr>
@@ -82,10 +82,8 @@ $products = Product::where('user_id', Auth::id())->get();
                             <th>PRODUCT</th>
                             <th>CATEGORY</th>
                             <th>QUANTITY</th>
-                            <th>PRICE</th>
                             <th>SHORT DESCRIPTION</th>
                             <th>DESCRIPTION</th>
-                            <th>TAX</th>
                             <th width="120">CREATED</th>
                             <th width="120">UPDATED</th>
                             <th>MANAGE STOCK</th>
@@ -103,7 +101,7 @@ $products = Product::where('user_id', Auth::id())->get();
 
                                 <td>
                                     <div class="d-flex align-items-center">
-                                   
+
                                         <div class="me-3">
                                             <img src="{{ filter_var($product->product_image, FILTER_VALIDATE_URL) ? $product->product_image : asset($product->product_image) }}"
                                                 alt="Product Image"
@@ -210,6 +208,138 @@ $products = Product::where('user_id', Auth::id())->get();
                             </tr>
                         @endforeach
 
+                    </tbody>
+
+                </table> --}}
+
+                      <table id="productTable" class="table table-hover table-bordered align-middle text-center">
+
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>PRODUCT</th>
+                            <th>CATEGORY</th>
+
+                            <th>SHORT DESC</th>
+                            <th>DESC</th>
+                            <th>CREATED</th>
+                            <th>UPDATED</th>
+                            <th>ACTION</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach ($products as $product)
+                            <tr>
+
+                                <td><strong>{{ $product->id }}</strong></td>
+
+                                <!-- Product -->
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src="{{ filter_var($product->product_image, FILTER_VALIDATE_URL) ? $product->product_image : asset($product->product_image) }}"
+                                            style="width:70px;height:70px;object-fit:cover;border-radius:8px;border:1px solid #ddd;"
+                                            class="me-2">
+
+                                        <div>
+                                            <strong>{{ $product->product_name }}</strong>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <!-- Category -->
+                                <td>
+                                    <span class="badge bg-primary">
+                                        {{ $product->categories_rel->title ?? 'N/A' }}
+                                    </span>
+                                </td>
+
+                                <!-- Quantity -->
+                                {{-- <td>
+                                <span class="badge bg-secondary">
+                                    {{ $product->inventory->quantity ?? 0 }}
+                                </span>
+                            </td> --}}
+
+
+
+                                <!-- Short Desc -->
+                                <td>
+                                    {{ Str::limit($product->small_description, 40) }}
+                                </td>
+
+                                <!-- Desc -->
+                                <td>
+                                    {{ Str::limit($product->description, 50) }}
+                                </td>
+
+
+
+                                <!-- Dates -->
+                                <td>{{ $product->created_at->format('d M Y') }}</td>
+                                <td>{{ $product->updated_at->format('d M Y') }}</td>
+
+
+                                <!-- Actions -->
+                                <td>
+                                    <div class="d-flex justify-content-center gap-2">
+
+                                        <!-- Edit -->
+                                        <a href="{{ route('edit.page.seller.product', $product->id) }}"
+                                            class="btn btn-warning btn-sm">
+                                            <i class="fa-solid fa-pencil"></i>
+                                        </a>
+
+                                        <!-- Delete -->
+                                        <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                            data-bs-target="#deleteModal{{ $product->id }}">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+
+                                    </div>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="deleteModal{{ $product->id }}" tabindex="-1">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title text-danger">
+                                                        <i class="fa-solid fa-triangle-exclamation"></i>
+                                                        Delete Confirmation
+                                                    </h5>
+                                                    <button type="button" class="btn-close"
+                                                        data-bs-dismiss="modal"></button>
+                                                </div>
+
+                                                <div class="modal-body text-center">
+                                                    Are you sure you want to delete?
+                                                    <br>
+                                                    <strong class="text-danger">
+                                                        {{ $product->product_name }}
+                                                    </strong>
+                                                </div>
+
+                                                <div class="modal-footer justify-content-center">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">
+                                                        Cancel
+                                                    </button>
+
+                                                    <a href="{{ route('delete.seller.product', $product->id) }}"
+                                                        class="btn btn-danger">
+                                                        Yes, Delete
+                                                    </a>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                        @endforeach
                     </tbody>
 
                 </table>

@@ -28,51 +28,7 @@ $cart = Cart::with('variant.product', 'variant.attributes.attributeValue')->wher
                         </div>
 
                         @if ($cart->count() > 0)
-                            {{-- @foreach ($cart as $item)
-                                <div class="row align-items-center mb-3 " id="row{{ $item->product_rel->id }}">
-
-                                    <div class="col-md-6 d-flex align-items-center">
-
-                                            <img src="{{ $item->product_rel->product_image }}" width="70"
-                                                class="me-3 rounded">  &nbsp;  &nbsp;   &nbsp;
-
-
-                                        <div>
-                                            <h6 class="mb-1">{{ $item->product_rel->product_name }}</h6>
-
-                                            <a href="{{ route('product-remove', $item->product_rel->id) }}"
-                                                class="text-danger small">Remove</a>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-2">
-                                        ${{ $item->price }}
-                                    </div>
-
-                                    <div class="col-md-2">
-
-                                        <a class="decrement btn btn-danger btn-sm"
-                                            data-id="{{ $item->product_rel->id }}">-</a>
-
-                                        <span class="qty{{ $item->product_rel->id }} mx-2">
-                                            {{ $item->quantity }}
-                                        </span>
-
-                                        <a class="increment btn btn-success btn-sm"
-                                            data-id="{{ $item->product_rel->id }}">+</a>
-
-                                    </div>
-
-                                    <div class="col-md-2 fw-bold total{{ $item->product_rel->id }}">
-                                        ${{ $item->price * $item->quantity }}
-                                    </div>
-
-                                </div>
-
-                                <hr>
-                            @endforeach --}}
-
-
+                         
                             @foreach ($cart as $item)
                                 <div class="row align-items-center mb-3" id="row{{ $item->variant->id }}">
 

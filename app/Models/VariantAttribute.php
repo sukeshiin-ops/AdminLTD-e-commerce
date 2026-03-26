@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class VariantAttribute extends Model
 {
-    protected $table = 'variant_attributes'; // 🔥 VERY IMPORTANT
+    protected $table = 'variant_attributes'; 
     public $guarded = [];
     public $timestamps = false;
 
@@ -19,5 +19,11 @@ class VariantAttribute extends Model
     public function variant()
     {
         return $this->belongsTo(ProductVariant::class, 'variant_id');
+    }
+
+
+    public function attribute()
+    {
+        return $this->belongsTo(Attribute::class, 'attribute_id');
     }
 }

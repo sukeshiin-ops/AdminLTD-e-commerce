@@ -99,12 +99,12 @@ class CartController extends Controller
     }
 
 
-    public function remove($id)
+    public function remove($variant_id)
     {
         $user = Auth::user();
 
         Cart::where('user_id', $user->id)
-            ->where('product_id', $id)
+            ->where('variant_id', $variant_id)
             ->delete();
 
         return redirect()->route('view.cart.page');

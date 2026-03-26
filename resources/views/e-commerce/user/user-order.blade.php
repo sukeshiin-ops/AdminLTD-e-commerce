@@ -132,7 +132,7 @@
                                         @if ($order->status == 'pending')
                                             <span class="badge bg-warning text-dark">Pending</span>
                                         @elseif($order->status == 'cancle')
-                                            <span class="badge bg-danger">Cancled</span>
+                                            <span class="badge bg-danger">Cancle</span>
                                         @elseif($order->status == 'shipped')
                                             <span class="badge bg-primary">Shipped</span>
                                         @elseif($order->status == 'delivered')

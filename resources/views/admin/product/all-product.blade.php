@@ -73,7 +73,7 @@ $products = Product::with(['categories_rel', 'variants.inventory'])->get();
                             <th>ID</th>
                             <th>PRODUCT</th>
                             <th>CATEGORY</th>
-                            {{-- <th>QTY</th> --}}
+                        
                             <th>SHORT DESC</th>
                             <th>DESC</th>
                             <th>CREATED</th>
@@ -115,7 +115,7 @@ $products = Product::with(['categories_rel', 'variants.inventory'])->get();
                                 </span>
                             </td> --}}
 
-                       
+
 
                                 <!-- Short Desc -->
                                 <td>

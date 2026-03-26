@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attribute;
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductInventory;
 use App\Models\StockHistory;
@@ -55,8 +57,10 @@ class StockController extends Controller
 
     public function create()
     {
-        $products = Product::all();
-        return view('e-commerce.seller.stock.create', compact('products'));
+
+        $categories = Category::all();
+        $attributes = Attribute::with('attributeValue')->get();
+        return view('e-commerce.seller.stock.create', compact( 'categories','attributes'));
     }
 
 

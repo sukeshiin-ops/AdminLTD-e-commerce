@@ -82,7 +82,6 @@
                                 <th>QUANTITY</th>
                                 <th>PRODUCT</th>
                                 <th>CUSTOMER</th>
-
                                 <th>AMOUNT</th>
                                 <th>STATUS</th>
                                 <th>CREATE</th>
@@ -91,8 +90,7 @@
                         </thead>
 
                         <tbody>
-
-                            @foreach ($orders->whereIn('id', [3, 4]) as $order)
+                            @foreach ($orders as $order)
                                 <tr>
                                     <td><strong>#{{ $order->id }}</strong></td>
 
@@ -102,8 +100,36 @@
                                         </span>
                                     </td>
 
+
+
                                     <td class="text-start">
-                                        {{ $order->orderDetails_rel->pluck('product.product_name')->implode(', ') }}
+                                        @foreach ($order->orderDetails_rel as $detail)
+                                            <div class="d-flex align-items-center mb-2">
+
+                                                <img src="{{ asset($detail->variant->image) }}"
+                                                    width="40" height="40" class="me-5 rounded border">
+
+                                                <div>
+                                                    <strong>{{ $detail->variant->product->product_name }}</strong>
+
+                                                    <br>
+
+                                                    <small class="text-muted">
+                                                        @foreach ($detail->variant->variantAttributes as $attr)
+                                                            <strong class="text-warning">
+                                                                {{ $attr->attribute->name }} :
+                                                                {{ $attr->attributeValue->value }}
+                                                            </strong>
+                                                            @if (!$loop->last)
+                                                                ,
+                                                            @endif
+                                                        @endforeach
+                                                    </small>
+
+                                                </div>
+
+                                            </div>
+                                        @endforeach
                                     </td>
 
                                     <td>
@@ -111,39 +137,31 @@
                                         {{ $order->user_rel->name }}
                                     </td>
 
-
-
-
-                                    <td>
-                                        <strong class="text-success">
-                                            ₹{{ $order->final_amount }}
+                                    <td><strong class="text-success">
+                                            ${{ $order->final_amount }}
                                         </strong>
                                     </td>
 
                                     <td>
                                         <span
                                             class="badge
-                @if ($order->status == 'pending') bg-warning text-dark
-                @elseif($order->status == 'completed') bg-success
-                @elseif($order->status == 'cancelled') bg-danger
-                @else bg-success @endif">
+                                            @if ($order->status == 'pending') bg-warning text-dark
+                                            @elseif($order->status == 'completed') bg-success
+                                            @elseif($order->status == 'cancelled') bg-danger
+                                            @else bg-success @endif">
                                             {{ ucfirst($order->status) }}
                                         </span>
                                     </td>
 
-                                    <td>
-                                        {{ $order->created_at->format('d M Y') }}
-                                    </td>
+                                    <td>{{ $order->created_at->format('d M Y') }}</td>
 
                                     <td>
                                         <a href="{{ route('invoice.page', $order->id) }}"
                                             class="btn btn-danger btn-sm btn-view">
                                             <i class="fa fa-eye me-1"></i> View
-                                        </a>
                                     </td>
                                 </tr>
                             @endforeach
-
                         </tbody>
 
                     </table>

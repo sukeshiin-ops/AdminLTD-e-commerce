@@ -13,6 +13,7 @@ use App\Models\VariantAttribute;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class ProductController extends Controller
 {
@@ -112,7 +113,7 @@ class ProductController extends Controller
 
                     $variant->save();
 
-                    // ✅ YAHAN LAGANA HAI (AFTER VARIANT SAVE)
+                    //  YAHAN LAGANA HAI (AFTER VARIANT SAVE)
                     if (isset($variantData['color_id'])) {
 
                         $colorAttribute = Attribute::where('type', 1)->first();
@@ -131,13 +132,13 @@ class ProductController extends Controller
                         }
                     }
 
-                    // ✅ Inventory
+                    // Inventory
                     ProductInventory::create([
                         'variant_id' => $variant->id,
                         'quantity' => $variantData['qty'] ?? 0
                     ]);
 
-                    // ✅ PHIR OTHER ATTRIBUTES
+                    // PHIR OTHER ATTRIBUTES
                     if ($request->has('attribute_values') && isset($variantData['variant'])) {
 
                         $variantName = $variantData['variant'];
@@ -198,7 +199,7 @@ class ProductController extends Controller
                     // }
 
 
-                    // ✅ SAFE ATTRIBUTE MAPPING (NO DUPLICATE + NO COLOR CONFLICT)
+                    // SAFE ATTRIBUTE MAPPING (NO DUPLICATE + NO COLOR CONFLICT)
                     if ($request->has('attribute_values') && isset($variantData['variant'])) {
 
                         $variantName = $variantData['variant']; // e.g. Blue - 4 GB
@@ -212,7 +213,7 @@ class ProductController extends Controller
 
                                 if ($attrValue && in_array($attrValue->value, $parts)) {
 
-                                    // ✅ CHECK duplicate before insert
+                                    // CHECK duplicate before insert
                                     $exists = VariantAttribute::where('variant_id', $variant->id)
                                         ->where('attribute_id', $attrId)
                                         ->exists();
@@ -231,7 +232,7 @@ class ProductController extends Controller
                 }
             } else {
 
-                // ✅ SIMPLE PRODUCT
+                // SIMPLE PRODUCT
                 $variant = new ProductVariant();
                 $variant->product_id = $product->id;
                 $variant->sku = 'SKU-' . uniqid();
@@ -248,8 +249,17 @@ class ProductController extends Controller
 
             DB::commit();
 
-            return redirect()->route('dashboard.page')
-                ->with('success', '🔥 Product Added Successfully!');
+            if (Gate::allows('isAdmin')) {
+                return redirect()->route('dashboard.page')
+                    ->with('success', ' Product Added Successfully!');
+            }else{
+                   return redirect()->route('view.seller.product')
+                ->with('success', ' Product Added Successfully!');
+            }
+
+
+
+
         } catch (\Exception $e) {
 
             DB::rollBack();
