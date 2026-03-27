@@ -27,13 +27,6 @@ class ProductController extends Controller
         )->findOrFail($id);
 
 
-
-        // return $product;
-
-        // return view('product-view', compact('product'));
-        // $product = Product::findOrFail($id);
-
-        // // Navbar ke liye categories
         $categories = Category::whereNull('parent_id')->get();
 
 

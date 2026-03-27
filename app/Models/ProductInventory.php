@@ -10,11 +10,16 @@ class ProductInventory extends Model
 {
     use HasFactory;
     public $table = 'product_inventory';
-     public $guarded = ['id'];
+    public $guarded = ['id'];
 
     public function Product_table()
     {
         return $this->belongsTo(Product::class, 'product_id');
+    }
+
+    public function inventory()
+    {
+        return $this->hasOne(ProductInventory::class, 'variant_id');
     }
 
 

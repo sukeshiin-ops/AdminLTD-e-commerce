@@ -17,50 +17,71 @@ use Illuminate\Support\Facades\Log;
 
 class StockController extends Controller
 {
+    // public function edit($id)
+    // {
+    //     // $product = ProductInventory::with('Product_table')->findOrFail($id);
+    //     // return view('e-commerce.seller.stock.edit', compact('product'));
+
+
+    //     $product = Product::with('variants.inventory')
+    //         ->where('user_id', Auth::id())
+    //         ->get();
+
+    //     return view('e-commerce.seller.stock.edit', compact('product'));
+    // }
+
     public function edit($id)
     {
-        $product = ProductInventory::with('Product_table')->findOrFail($id);
+        $product = Product::with([
+            'variants.inventory',
+            'variants.histories' // history relation
+        ])
+            ->where('user_id', Auth::id())
+            ->findOrFail($id);
+
         return view('e-commerce.seller.stock.edit', compact('product'));
     }
 
 
-
     public function update(Request $request, $id)
     {
-
         $request->validate([
+            'variant_id' => 'required|exists:product_variants,id',
             'new_stock' => 'required|integer|min:0',
         ]);
 
+        // GET INVENTORY BY VARIANT
+        $inventory = ProductInventory::where('variant_id', $request->variant_id)->first();
 
-        $product = ProductInventory::findOrFail($id);
+        if (!$inventory) {
+            $inventory = ProductInventory::create([
+                'variant_id' => $request->variant_id,
+                'quantity' => 0
+            ]);
+        }
 
-        $oldStock = $product->quantity;
+        $oldStock = $inventory->quantity;
         $addedStock = $request->new_stock;
 
-        $product->quantity = $oldStock + $addedStock;
-        $product->save();
+        $inventory->quantity = $oldStock + $addedStock;
+        $inventory->save();
 
-
+        // SAVE HISTORY (VARIANT BASED)
         StockHistory::create([
-            'inventory_id' => $product->id,
+            'variant_id' => $request->variant_id,
             'added_stock' => $addedStock,
-            'old_stock'   => $oldStock,
-            'new_total'   => $product->quantity,
+            'old_stock' => $oldStock,
+            'new_total' => $inventory->quantity,
         ]);
 
-
-        return redirect()->route('view.seller.product')
-            ->with('success', 'Stock updated successfully!');
+        return back()->with('success', 'Stock updated successfully!');
     }
-
-
     public function create()
     {
 
         $categories = Category::all();
         $attributes = Attribute::with('attributeValue')->get();
-        return view('e-commerce.seller.stock.create', compact( 'categories','attributes'));
+        return view('e-commerce.seller.stock.create', compact('categories', 'attributes'));
     }
 
 

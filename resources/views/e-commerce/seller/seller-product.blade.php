@@ -74,143 +74,7 @@ $products = Product::where('user_id', Auth::id())->get();
 
                 </div>
 
-                {{-- <table id="productTable" class="table table-hover table-bordered align-middle text-center">
 
-                    <thead class="table-dark">
-                        <tr>
-                            <th width="60">ID</th>
-                            <th>PRODUCT</th>
-                            <th>CATEGORY</th>
-                            <th>QUANTITY</th>
-                            <th>SHORT DESCRIPTION</th>
-                            <th>DESCRIPTION</th>
-                            <th width="120">CREATED</th>
-                            <th width="120">UPDATED</th>
-                            <th>MANAGE STOCK</th>
-                            <th>ACTION</th>
-
-                        </tr>
-                    </thead>
-
-                    <tbody>
-
-                        @foreach ($products as $product)
-                            <tr>
-
-                                <td><strong>{{ $product->id }}</strong></td>
-
-                                <td>
-                                    <div class="d-flex align-items-center">
-
-                                        <div class="me-3">
-                                            <img src="{{ filter_var($product->product_image, FILTER_VALIDATE_URL) ? $product->product_image : asset($product->product_image) }}"
-                                                alt="Product Image"
-                                                style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd;">
-                                        </div>
-
-
-                                        <div class="product-name">
-                                            <strong>{{ $product->product_name }}</strong>
-                                        </div>
-                                    </div>
-                                </td>
-                                </td>
-
-                                <td><strong>{{ $product->categories_rel->title }}</strong></td>
-
-                                <td>
-                                    <strong>
-                                        {{ $product->inventory->quantity ?? 0 }}
-                                    </strong>
-                                </td>
-                                <td><strong class="text-success">${{ $product->product_price }}</strong></td>
-
-                                <td><strong>{{ $product->small_description }}</strong></td>
-
-                                <td><strong>{{ $product->description }}</strong></td>
-
-
-                                <td><strong class="text-danger">{{ $product->tax }}</strong></td>
-
-
-                                <td><strong>{{ $product->created_at->format('d M Y') }}</strong></td>
-
-                                <td><strong>{{ $product->updated_at->format('d M Y') }}</strong></td>
-
-                                <td>
-                                    @if ($product->inventory)
-                                        <a class="btn btn-success"
-                                            href="{{ route('seller.stock.edit', $product->inventory->id) }}">
-                                            <strong> Add Stock</strong>
-                                        </a>
-                                    @else
-                                        <a class="btn btn-success" href="{{ route('seller.stock.edit', $product->id) }}">
-                                            <strong> Add Stock</strong>
-                                        </a>
-                                    @endif
-
-                                </td>
-
-                                <td>
-                                    <div class="action-button d-flex gap-3">
-
-                                        <a href="{{ route('edit.page.seller.product', $product->id) }}"
-                                            class="btn btn-sm btn-warning">
-                                            <i class="fa-solid fa-pencil"></i>
-                                        </a>
-
-
-                                        <a type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
-                                            data-bs-target="#deleteModal{{ $product->id }}">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </a>
-                                    </div>
-
-                                    <div class="modal fade" id="deleteModal{{ $product->id }}" tabindex="-1">
-                                        <div class="modal-dialog modal-dialog-centered">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title text-danger">
-                                                        <i class="fa-solid fa-triangle-exclamation"></i>
-                                                        Delete Confirmation
-                                                    </h5>
-                                                    <button type="button" class="btn-close"
-                                                        data-bs-dismiss="modal"></button>
-                                                </div>
-
-                                                <div class="modal-body text-center">
-                                                    Are you sure you want to delete
-                                                    <br>
-                                                    <strong class="text-danger">
-                                                        {{ $product->proudct_name }}
-                                                    </strong> ?
-                                                </div>
-
-                                                <div class="modal-footer justify-content-center">
-                                                    <button type="button" class="btn btn-secondary"
-                                                        data-bs-dismiss="modal">
-                                                        Cancel
-                                                    </button>
-
-
-                                                    <a href="{{ route('delete.seller.product', $product->id) }}"
-                                                        class="btn btn-danger">
-                                                        Yes, Delete
-                                                    </a>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-
-
-                            </tr>
-                        @endforeach
-
-                    </tbody>
-
-                </table> --}}
 
                       <table id="productTable" class="table table-hover table-bordered align-middle text-center">
 
@@ -222,6 +86,7 @@ $products = Product::where('user_id', Auth::id())->get();
 
                             <th>SHORT DESC</th>
                             <th>DESC</th>
+                            <th>STOCKS</th>
                             <th>CREATED</th>
                             <th>UPDATED</th>
                             <th>ACTION</th>
@@ -254,12 +119,7 @@ $products = Product::where('user_id', Auth::id())->get();
                                     </span>
                                 </td>
 
-                                <!-- Quantity -->
-                                {{-- <td>
-                                <span class="badge bg-secondary">
-                                    {{ $product->inventory->quantity ?? 0 }}
-                                </span>
-                            </td> --}}
+
 
 
 
@@ -271,6 +131,10 @@ $products = Product::where('user_id', Auth::id())->get();
                                 <!-- Desc -->
                                 <td>
                                     {{ Str::limit($product->description, 50) }}
+                                </td>
+
+                                <td>
+                                  <a href="{{ route('seller.stock.edit', $product->id) }}" class="btn btn-success">Stock</a>
                                 </td>
 
 

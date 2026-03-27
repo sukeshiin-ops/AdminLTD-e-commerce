@@ -37,4 +37,11 @@ class ProductVariant extends Model
     {
         return $this->hasMany(VariantAttribute::class, 'variant_id');
     }
+
+
+    public function histories()
+    {
+        return $this->hasMany(StockHistory::class, 'variant_id', 'id')
+            ->latest();
+    }
 }

@@ -49,14 +49,6 @@ class SellerController extends Controller
         return view('e-commerce.seller.order-page', compact('orders', 'product'));
     }
 
-    // public function invoicePage($id)
-    // {
-
-    //     $order = Order::with('orderDetails_rel.product', 'user_rel')->findOrFail($id);
-
-
-    //     return view('e-commerce.seller.invoice', compact('order'));
-    // }
 
     public function invoicePage($id)
     {
