@@ -110,4 +110,23 @@ class OrderController extends Controller
 
         return view('e-commerce.user.user-order', compact('orders'));
     }
+
+
+    public function updateStatus(Request $request)
+    {
+
+        $request->validate([
+            'status' => 'required|in:pending,delivered,cancelled,Out for Delivery,'
+        ]);
+        $order = Order::find($request->order_id);
+
+        if (!$order) {
+            return response()->json(['error' => 'Order not found'], 404);
+        }
+
+        $order->status = $request->status;
+        $order->save();
+
+        return response()->json(['success' => true]);
+    }
 }

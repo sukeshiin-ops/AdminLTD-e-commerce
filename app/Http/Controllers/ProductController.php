@@ -23,7 +23,8 @@ class ProductController extends Controller
     {
 
         $product = Product::with(
-            'productVariant.attributes.attributeValue.attribute'
+            'productVariant.attributes.attributeValue.attribute',
+               'productVariant.inventory'
         )->findOrFail($id);
 
 
@@ -167,30 +168,7 @@ class ProductController extends Controller
                         'quantity' => $variantData['qty'] ?? 0
                     ]);
 
-                    // IMPORTANT FIX (correct attribute mapping)
-                    // if ($request->has('attribute_values') && isset($variantData['variant'])) {
-
-                    //     $variantName = $variantData['variant']; // e.g. Blue - 4 GB
-                    //     $parts = explode(' - ', $variantName);
-
-                    //     foreach ($request->attribute_values as $attrId => $values) {
-
-                    //         foreach ($values as $valId) {
-
-                    //             $attrValue = AttributeValue::find($valId);
-
-                    //             if ($attrValue && in_array($attrValue->value, $parts)) {
-
-                    //                 VariantAttribute::create([
-                    //                     'variant_id' => $variant->id,
-                    //                     'attribute_id' => $attrId,
-                    //                     'attribute_value_id' => $valId,
-                    //                 ]);
-                    //             }
-                    //         }
-                    //     }
-                    // }
-
+ 
 
                     // SAFE ATTRIBUTE MAPPING (NO DUPLICATE + NO COLOR CONFLICT)
                     if ($request->has('attribute_values') && isset($variantData['variant'])) {

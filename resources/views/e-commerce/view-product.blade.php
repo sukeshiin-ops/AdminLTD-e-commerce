@@ -210,15 +210,19 @@
                                             <small id="exTax">Ex Tax: $0</small> <br>
                                             <small id="discount">Discount: $0</small>
                                         </h4>
+
+
+                                        {{-- <h5 id="stockText" class="mt-2 text-success">In Stock</h5> --}}
+
                                     </div>
 
+
                                     <div class="mt-4">
-                                        <a href="#" id="addToCart"
-                                            class="btn btn-primary btn-lg btn-flat">
+                                        <a href="#" id="addToCart" class="btn btn-primary btn-lg btn-flat">
                                             <i class="fas fa-cart-plus fa-lg mr-2"></i>
                                             Add to Cart
                                         </a>
-{{-- <a href="#" id="addToCart" class="btn btn-primary btn-lg btn-flat"></a> --}}
+                                        {{-- <a href="#" id="addToCart" class="btn btn-primary btn-lg btn-flat"></a> --}}
                                     </div>
 
 
@@ -342,6 +346,8 @@
 
 
         function matchVariant() {
+
+
 
             //  Check: dono select hue kya?
             if (!selected['color'] || !selected['size']) {

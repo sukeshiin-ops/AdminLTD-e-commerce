@@ -106,8 +106,8 @@
                                         @foreach ($order->orderDetails_rel as $detail)
                                             <div class="d-flex align-items-center mb-2">
 
-                                                <img src="{{ asset($detail->variant->image) }}"
-                                                    width="40" height="40" class="me-5 rounded border">
+                                                <img src="{{ asset($detail->variant->image) }}" width="40"
+                                                    height="40" class="me-5 rounded border">
 
                                                 <div>
                                                     <strong>{{ $detail->variant->product->product_name }}</strong>
@@ -141,7 +141,7 @@
                                             ${{ $order->final_amount }}
                                         </strong>
                                     </td>
-
+                                    {{--
                                     <td>
                                         <span
                                             class="badge
@@ -151,6 +151,21 @@
                                             @else bg-success @endif">
                                             {{ ucfirst($order->status) }}
                                         </span>
+                                    </td> --}}
+
+                                    <td>
+                                        <select class="form-select form-select-sm status-change"
+                                            data-id="{{ $order->id }}">
+                                            <option value="pending" class="text-info" {{ $order->status == 'pending' ? 'selected' : '' }}>
+                                                Pending</option>
+
+                                            <option value="pending"  class="text-success" {{ $order->status == 'delivered' ? 'selected' : '' }}>
+                                                delivered</option>
+
+            
+                                            <option value="cancelled" class="text-danger"
+                                                {{ $order->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                                        </select>
                                     </td>
 
                                     <td>{{ $order->created_at->format('d M Y') }}</td>
@@ -185,6 +200,35 @@
                     search: "_INPUT_",
                     searchPlaceholder: "Search orders..."
                 }
+            });
+
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+
+            $('.status-change').change(function() {
+
+                let status = $(this).val();
+                let order_id = $(this).data('id');
+
+                $.ajax({
+                    url: "{{ route('order.status.update') }}",
+                    method: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        order_id: order_id,
+                        status: status
+                    },
+                    success: function(res) {
+                        alert('Status Updated Successfully ');
+                    },
+                    error: function() {
+                        alert('Something went wrong ');
+                    }
+                });
+
             });
 
         });

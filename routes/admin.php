@@ -120,9 +120,6 @@ Route::middleware([checkLogin::class])->group(function () {
 
 
 
-
-
-
 //E-commerce
 
 
@@ -179,7 +176,8 @@ Route::get('seller/stock/{id}/edit', [StockController::class, 'edit'])->name('se
 Route::put('seller/stock/{id}', [StockController::class, 'update'])->name('seller.stock.update');
 Route::get('/seller/stock/create', [StockController::class, 'create'])->name('seller.stock.create');
 Route::post('/seller/stock/store', [StockController::class, 'store'])->name('seller.stock.store');
-
+Route::post('/order-status-update', [OrderController::class, 'updateStatus'])
+    ->name('order.status.update');
 
 //after cart
 Route::get('order-checkout', [OrderController::class, 'OrderCheckout'])->name('order.checkout');
